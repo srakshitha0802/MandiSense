@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MandiSense - Collective Market Memory</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+        }
+        .market-range {
+            background: linear-gradient(to right, #dcfce7, #fef3c7, #fecaca);
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen">
+    <div class="max-w-md mx-auto bg-white min-h-screen shadow-xl">
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-4">
+            <h1 class="text-xl font-bold">MandiSense</h1>
+            <p class="text-indigo-100 text-sm">Collective Market Memory</p>
+        </div>
+
+        <!-- Screen Container -->
+        <div id="app-container" class="p-4">
+            <!-- Screen 1: Negotiation & Translation -->
+            <div id="screen-1" class="screen active">
+                <div class="mb-6">
+                    <h2 class="text-lg font-bold text-slate-800 mb-2">Live Negotiation</h2>
+                    <p class="text-slate-600 text-sm">Real-time multilingual interaction</p>
+                </div>
+
+                <!-- Commodity Selection -->
+                <div class="bg-slate-50 rounded-lg p-4 mb-4 border-2 border-slate-200">
+                    <div class="text-xs text-slate-500 mb-2">Commodity selected:</div>
+                    <div class="text-lg font-bold text-slate-800">Tomatoes, 50kg</div>
+                </div>
+
+                <!-- Participants -->
+                <div class="space-y-4 mb-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-2">
+                            <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
+                                <span class="text-blue-700 font-bold text-sm">V</span>
+                            </div>
+                            <div>
+                                <div class="text-xs text-slate-500">Vendor</div>
+                                <div class="text-sm font-medium text-slate-700">Speaking Telugu</div>
+                            </div>
+                        </div>
+                        <div class="bg-green-100 text-green-700 text-xs px-3 py-1 rounded-full font-medium">
+                            Active
+                        </div>
+                    </div>
+
+                    <!-- Conversation -->
+                    <div class="space-y-3">
+                        <div class="bg-blue-50 rounded-lg p-3 border-l-4 border-blue-400">
+                            <div class="text-xs text-blue-600 mb-1">Vendor (Telugu)</div>
+                            <div class="text-slate-800 font-medium">నేను 25 రూపాయలు కిలో ఇవ్వగలను</div>
+                            <div class="text-xs text-slate-500 mt-2">Translated: "I can offer ₹25 per kg"</div>
+                        </div>
+
+                        <div class="bg-green-50 rounded-lg p-3 border-l-4 border-green-400">
+                            <div class="text-xs text-green-600 mb-1">Buyer (Hindi)</div>
+                            <div class="text-slate-800 font-medium">यह बहुत ज्यादा है। ₹20 में दे सकते हैं?</div>
+                            <div class="text-xs text-slate-500 mt-2">Translated: "That's too much. Can you do ₹20?"</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex gap-3 mb-4">
+                    <button class="flex-1 bg-indigo-600 text-white py-3 rounded-lg font-medium flex items-center justify-center gap-2 hover:bg-indigo-700 transition-colors">
+                        <i data-lucide="mic" class="w-5 h-5"></i>
+                        Speak to Negotiate
+                    </button>
+                    <button class="px-6 bg-slate-200 text-slate-700 py-3 rounded-lg font-medium hover:bg-slate-300 transition-colors">
+                        Type
+                    </button>
+                </div>
+
+                <div class="text-xs text-slate-500 text-center mb-6">
+                    Conversation is private. No recording. No identity tracking.
+                </div>
+
+                <button onclick="showScreen(2)" class="w-full bg-indigo-600 text-white py-3 rounded-lg font-medium hover:bg-indigo-700 transition-colors flex items-center justify-center gap-2">
+                    View Market Context
+                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </button>
+            </div>
+
+            <!-- Screen 2: Market Context -->
+            <div id="screen-2" class="screen hidden">
+                <div class="mb-6">
+                    <h2 class="text-lg font-bold text-slate-800 mb-2">Market Context</h2>
+                    <p class="text-slate-600 text-sm">Live price bands and demand signals</p>
+                </div>
+
+                <div class="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-lg p-5 border-2 border-indigo-200 mb-6">
+                    <div class="flex items-center gap-2 mb-4">
+                        <i data-lucide="trending-up" class="w-5 h-5 text-indigo-600"></i>
+                        <h3 class="font-bold text-indigo-900">Today's Market Context</h3>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div>
+                            <div class="text-xs text-slate-600 mb-2">Typical Price Range (Tomatoes)</div>
+                            <div class="relative h-8 bg-white rounded-lg overflow-hidden border border-slate-200">
+                                <div class="absolute inset-0 flex items-center px-3">
+                                    <div class="flex-1 relative">
+                                        <div class="h-2 market-range rounded-full"></div>
+                                        <div class="absolute left-0 top-0 h-full flex items-center">
+                                            <span class="text-xs font-medium text-slate-700">₹18</span>
+                                        </div>
+                                        <div class="absolute right-0 top-0 h-full flex items-center">
+                                            <span class="text-xs font-medium text-slate-700">₹24</span>
+                                        </div>
+                                        <div class="absolute left-1/2 top-0 h-full flex items-center -ml-4">
+                                            <div class="w-8 h-4 bg-indigo-600 rounded-sm"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-xs text-slate-500 mt-1 text-center">Current offer: ₹25/kg</div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="bg-white rounded-lg p-3 border border-slate-200">
+                                <div class="text-xs text-slate-600 mb-1">Activity Level</div>
+                                <div class="text-lg font-bold text-slate-800">Moderate</div>
+                                <div class="text-xs text-slate-500">47 deals today</div>
+                            </div>
+                            <div class="bg-white rounded-lg p-3 border border-slate-200">
+                                <div class="text-xs text-slate-600 mb-1">Demand Signal</div>
+                                <div class="text-lg font-bold text-slate-800">Steady</div>
+                                <div class="text-xs text-slate-500">Normal buying</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-amber-50 rounded-lg p-4 border-2 border-amber-200 mb-6">
+                    <div class="text-xs text-amber-800 mb-2 font-medium">Context Note</div>
+                    <div class="text-sm text-slate-700">
+                        This pricing context reflects actual transactions from the past 3 hours. It does not suggest a "correct" price—only what others have agreed to.
+                    </div>
+                </div>
+
+                <div class="flex gap-3">
+                    <button onclick="showScreen(1)" class="flex-1 bg-slate-200 text-slate-700 py-3 rounded-lg font-medium hover:bg-slate-300 transition-colors">
+                        Back to Negotiation
+                    </button>
+                    <button onclick="showScreen(3)" class="flex-1 bg-indigo-600 text-white py-3 rounded-lg font-medium hover:bg-indigo-700 transition-colors flex items-center justify-center gap-2">
+                        Complete Deal
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Screen 3: Alignment Reflection -->
+            <div id="screen-3" class="screen hidden">
+                <div class="mb-6">
+                    <h2 class="text-lg font-bold text-slate-800 mb-2">Deal Reflection</h2>
+                    <p class="text-slate-600 text-sm">Non-punitive collective feedback</p>
+                </div>
+
+                <div class="text-center mb-6">
+                    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <i data-lucide="check-circle" class="w-8 h-8 text-green-600"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-800">Deal Completed</h3>
+                    <div class="text-slate-600 mt-1">₹22 per kg • 50kg • Total: ₹1,100</div>
+                </div>
+
+                <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg p-5 border-2 border-blue-200 mb-6">
+                    <div class="flex items-center gap-2 mb-3">
+                        <i data-lucide="message-circle" class="w-5 h-5 text-blue-600"></i>
+                        <h4 class="font-bold text-blue-900">Market Alignment Signal</h4>
+                    </div>
+
+                    <div class="bg-white rounded-lg p-4 mb-4 border border-blue-100">
+                        <p class="text-slate-800 leading-relaxed" id="alignment-signal">
+                            This agreement aligns with today's typical pricing patterns. The negotiation reflected balanced market behavior.
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="bg-white rounded-lg p-3 border border-slate-200">
+                            <div class="text-xs text-slate-600 mb-1">Similar Deals Today</div>
+                            <div class="text-lg font-bold text-slate-800">47</div>
+                            <div class="text-xs text-slate-500">Range: ₹20-₹24/kg</div>
+                        </div>
+                        <div class="bg-white rounded-lg p-3 border border-slate-200">
+                            <div class="text-xs text-slate-600 mb-1">Market Consistency</div>
+                            <div class="text-lg font-bold text-green-600">High</div>
+                            <div class="text-xs text-slate-500">Fair trading pattern</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 rounded-lg p-4 border-2 border-slate-200 mb-6">
+                    <div class="text-xs text-slate-600 mb-2 font-medium">What This Means</div>
+                    <div class="text-sm text-slate-700 space-y-2">
+                        <p>This signal reflects collective market behavior, not individual judgment. It helps both parties understand how this deal compares to others today.</p>
+                        <p class="text-xs text-slate-500">No scores are saved. No identities are tracked. This reflection exists only for this transaction.</p>
+                    </div>
+                </div>
+
+                <div class="space-y-3">
+                    <button onclick="generateNewSignal()" class="w-full bg-indigo-600 text-white py-3 rounded-lg font-medium hover:bg-indigo-700 transition-colors">
+                        Generate Live Signal
+                    </button>
+                    <button onclick="showScreen(1)" class="w-full bg-slate-200 text-slate-700 py-3 rounded-lg font-medium hover:bg-slate-300 transition-colors">
+                        Start New Negotiation
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Dots -->
+        <div class="flex justify-center gap-2 p-4">
+            <div class="w-2 h-2 rounded-full bg-indigo-600 screen-dot active" data-screen="1"></div>
+            <div class="w-2 h-2 rounded-full bg-slate-300 screen-dot" data-screen="2"></div>
+            <div class="w-2 h-2 rounded-full bg-slate-300 screen-dot" data-screen="3"></div>
+        </div>
+
+        <!-- Footer -->
+        <div class="bg-gradient-to-r from-amber-50 to-orange-50 border-t-2 border-amber-200 p-4">
+            <p class="text-slate-700 text-xs text-center">
+                <strong>Design Philosophy:</strong> Every element serves comprehension, not persuasion. The interface disappears into the negotiation.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Screen navigation
+        function showScreen(screenNumber) {
+            // Hide all screens
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.add('hidden');
+                screen.classList.remove('active');
+            });
+
+            // Show target screen
+            const targetScreen = document.getElementById(`screen-${screenNumber}`);
+            targetScreen.classList.remove('hidden');
+            targetScreen.classList.add('active');
+
+            // Update navigation dots
+            document.querySelectorAll('.screen-dot').forEach(dot => {
+                dot.classList.remove('bg-indigo-600');
+                dot.classList.add('bg-slate-300');
+            });
+            document.querySelector(`[data-screen="${screenNumber}"]`).classList.remove('bg-slate-300');
+            document.querySelector(`[data-screen="${screenNumber}"]`).classList.add('bg-indigo-600');
+        }
+
+        // Simulate live signal generation using the Python backend
+        async function generateNewSignal() {
+            const signalElement = document.getElementById('alignment-signal');
+            const originalText = signalElement.textContent;
+            
+            // Show loading state
+            signalElement.textContent = 'Analyzing collective market patterns...';
+            signalElement.classList.add('animate-pulse');
+
+            // Simulate API call delay
+            setTimeout(() => {
+                const signals = [
+                    "This negotiation approach aligns with patterns that consistently build market trust.",
+                    "This interaction style matches successful relationship-building patterns in the market.",
+                    "This negotiation style aligns with established market patterns.",
+                    "This approach reflects common negotiation patterns in the current market.",
+                    "This negotiation approach differs from recent collective market patterns.",
+                    "This interaction style is less common in current market behavior.",
+                    "[System maintains silence - insufficient confidence for meaningful guidance]"
+                ];
+
+                const randomSignal = signals[Math.floor(Math.random() * signals.length)];
+                signalElement.textContent = randomSignal;
+                signalElement.classList.remove('animate-pulse');
+
+                // If system maintains silence, show different styling
+                if (randomSignal.includes('System maintains silence')) {
+                    signalElement.classList.add('text-slate-500', 'italic');
+                } else {
+                    signalElement.classList.remove('text-slate-500', 'italic');
+                }
+            }, 2000);
+        }
+
+        // Add click handlers for navigation dots
+        document.querySelectorAll('.screen-dot').forEach(dot => {
+            dot.addEventListener('click', () => {
+                const screenNumber = parseInt(dot.dataset.screen);
+                showScreen(screenNumber);
+            });
+        });
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', () => {
+            showScreen(1);
+        });
+    </script>
+</body>
+</html>

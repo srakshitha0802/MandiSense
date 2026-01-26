@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MandiSense - Collective Market Memory</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+        }
+        .market-range {
+            background: linear-gradient(to right, #dcfce7, #fef3c7, #fecaca);
+        }
+        .pulse-animation {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen">
+    <div class="max-w-md mx-auto bg-white min-h-screen shadow-xl">
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-4">
+            <h1 class="text-xl font-bold">MandiSense</h1>
+            <p class="text-indigo-100 text-sm">Collective Market Memory</p>
+            <div class="mt-2 text-xs">
+                <span id="system-status" class="bg-green-500 text-white px-2 py-1 rounded-full">Live System</span>
+                <span id="coherence-display" class="ml-2 text-indigo-100">Coherence: Loading...</span>
+            </div>
+        </div>
+
+        <!-- Screen Container -->
+        <div id="app-container" class="p-4">
+            <!-- Screen 1: Negotiation & Translation -->
+            <div id="screen-1" class="screen active">
+                <div class="mb-6">
+                    <h2 class="text-lg font-bold text-slate-800 mb-2">Live Negotiation</h2>
+                    <p class="text-slate-600 text-sm">Real-time multilingual interaction</p>
+                </div>
+
+                <!-- Commodity Selection -->
+                <div class="bg-slate-50 rounded-lg p-4 mb-4 border-2 border-slate-200">
+                    <div class="text-xs text-slate-500 mb-2">Commodity selected:</div>
+                    <select id="commodity-select" class="text-lg font-bold text-slate-800 bg-transparent border-none outline-none">
+                        <option value="tomatoes">Tomatoes, 50kg</option>
+                        <option value="onions">Onions, 30kg</option>
+                        <option value="rice">Rice, 25kg</option>
+                    </select>
+                </div>
+
+                <!-- Participants -->
+                <div class="space-y-4 mb-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-2">
+                            <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
+                                <span class="text-blue-700 font-bold text-sm">V</span>
+                            </div>
+                            <div>
+                                <div class="text-xs text-slate-500">Vendor</div>
+                                <div class="text-sm font-medium text-slate-700">Speaking Telugu</div>
+                            </div>
+                        </div>
+                        <div class="bg-green-100 text-green-700 text-xs px-3 py-1 rounded-full font-medium">
+                            Active
+                        </div>
+                    </div>
+
+                    <!-- Conversation -->
+                    <div class="space-y-3" id="conversation-area">
+                        <div class="bg-blue-50 rounded-lg p-3 border-l-4 border-blue-400">
+                            <div class="text-xs text-blue-600 mb-1">Vendor (Telugu)</div>
+                            <div class="text-slate-800 font-medium" id="vendor-original">నేను 25 రూపాయలు కిలో ఇవ్వగలను</div>
+                            <div class="text-xs text-slate-500 mt-2" id="vendor-translated">Translated: "I can offer ₹25 per kg"</div>
+                        </div>
+
+                        <div class="bg-green-50 rounded-lg p-3 border-l-4 border-green-400">
+                            <div class="text-xs text-green-600 mb-1">Buyer (Hindi)</div>
+                            <div class="text-slate-800 font-medium" id="buyer-original">यह बहुत ज्यादा है। ₹20 में दे सकते हैं?</div>
+                            <div class="text-xs text-slate-500 mt-2" id="buyer-translated">Translated: "That's too much. Can you do ₹20?"</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Custom Input Area -->
+                <div class="mb-4">
+                    <div class="text-xs text-slate-600 mb-2">Try your own negotiation:</div>
+                    <div class="space-y-2">
+                        <input type="text" id="vendor-input" placeholder="Vendor message..." 
+                               class="w-full p-3 border border-slate-300 rounded-lg text-sm">
+                        <input type="text" id="buyer-input" placeholder="Buyer response..." 
+                               class="w-full p-3 border border-slate-300 rounded-lg text-sm">
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex gap-3 mb-4">
+                    <button onclick="simulateNegotiation()" class="flex-1 bg-indigo-600 text-white py-3 rounded-lg font-medium flex items-center justify-center gap-2 hover:bg-indigo-700 transition-colors">
+                        <i data-lucide="mic" class="w-5 h-5"></i>
+                        Process Negotiation
+                    </button>
+                    <button onclick="clearInputs()" class="px-6 bg-slate-200 text-slate-700 py-3 rounded-lg font-medium hover:bg-slate-300 transition-colors">
+                        Clear
+                    </button>
+                </div>
+
+                <div class="text-xs text-slate-500 text-center mb-6">
+                    Conversation is private. No recording. No identity tracking.
+                </div>
+
+                <button onclick="showScreen(2)" class="w-full bg-indigo-600 text-white py-3 rounded-lg font-medium hover:bg-indigo-700 transition-colors flex items-center justify-center gap-2">
+                    View Market Context
+                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </button>
+            </div>
+
+            <!-- Screen 2: Market Context -->
+            <div id="screen-2" class="screen hidden">
+                <div class="mb-6">
+                    <h2 class="text-lg font-bold text-slate-800 mb-2">Market Context</h2>
+                    <p class="text-slate-600 text-sm">Live price bands and demand signals</p>
+                </div>
+
+                <div class="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-lg p-5 border-2 border-indigo-200 mb-6">
+                    <div class="flex items-center gap-2 mb-4">
+                        <i data-lucide="trending-up" class="w-5 h-5 text-indigo-600"></i>
+                        <h3 class="font-bold text-indigo-900">Today's Market Context</h3>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div>
+                            <div class="text-xs text-slate-600 mb-2">Typical Price Range (Tomatoes)</div>
+                            <div class="relative h-8 bg-white rounded-lg overflow-hidden border border-slate-200">
+                                <div class="absolute inset-0 flex items-center px-3">
+                                    <div class="flex-1 relative">
+                                        <div class="h-2 market-range rounded-full"></div>
+                                        <div class="absolute left-0 top-0 h-full flex items-center">
+                                            <span class="text-xs font-medium text-slate-700">₹18</span>
+                                        </div>
+                                        <div class="absolute right-0 top-0 h-full flex items-center">
+                                            <span class="text-xs font-medium text-slate-700">₹24</span>
+                                        </div>
+                                        <div class="absolute left-1/2 top-0 h-full flex items-center -ml-4">
+                                            <div class="w-8 h-4 bg-indigo-600 rounded-sm"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-xs text-slate-500 mt-1 text-center">Current offer: ₹25/kg</div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="bg-white rounded-lg p-3 border border-slate-200">
+                                <div class="text-xs text-slate-600 mb-1">Market Coherence</div>
+                                <div class="text-lg font-bold text-slate-800" id="market-coherence-display">Loading...</div>
+                                <div class="text-xs text-slate-500">Collective intelligence</div>
+                            </div>
+                            <div class="bg-white rounded-lg p-3 border border-slate-200">
+                                <div class="text-xs text-slate-600 mb-1">Trust Density</div>
+                                <div class="text-lg font-bold text-slate-800" id="trust-density-display">Loading...</div>
+                                <div class="text-xs text-slate-500">Market trust level</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-amber-50 rounded-lg p-4 border-2 border-amber-200 mb-6">
+                    <div class="text-xs text-amber-800 mb-2 font-medium">Context Note</div>
+                    <div class="text-sm text-slate-700">
+                        This context reflects collective behavioral patterns from anonymous interactions. It does not suggest a "correct" price—only what patterns emerge from the market.
+                    </div>
+                </div>
+
+                <div class="flex gap-3">
+                    <button onclick="showScreen(1)" class="flex-1 bg-slate-200 text-slate-700 py-3 rounded-lg font-medium hover:bg-slate-300 transition-colors">
+                        Back to Negotiation
+                    </button>
+                    <button onclick="showScreen(3)" class="flex-1 bg-indigo-600 text-white py-3 rounded-lg font-medium hover:bg-indigo-700 transition-colors flex items-center justify-center gap-2">
+                        Complete Deal
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Screen 3: Alignment Reflection -->
+            <div id="screen-3" class="screen hidden">
+                <div class="mb-6">
+                    <h2 class="text-lg font-bold text-slate-800 mb-2">Deal Reflection</h2>
+                    <p class="text-slate-600 text-sm">Non-punitive collective feedback</p>
+                </div>
+
+                <div class="text-center mb-6">
+                    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <i data-lucide="check-circle" class="w-8 h-8 text-green-600"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-800">Deal Completed</h3>
+                    <div class="text-slate-600 mt-1">₹22 per kg • 50kg • Total: ₹1,100</div>
+                </div>
+
+                <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg p-5 border-2 border-blue-200 mb-6">
+                    <div class="flex items-center gap-2 mb-3">
+                        <i data-lucide="message-circle" class="w-5 h-5 text-blue-600"></i>
+                        <h4 class="font-bold text-blue-900">Market Alignment Signal</h4>
+                    </div>
+
+                    <div class="bg-white rounded-lg p-4 mb-4 border border-blue-100">
+                        <p class="text-slate-800 leading-relaxed" id="alignment-signal">
+                            This agreement aligns with today's typical pricing patterns. The negotiation reflected balanced market behavior.
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="bg-white rounded-lg p-3 border border-slate-200">
+                            <div class="text-xs text-slate-600 mb-1">Pattern Familiarity</div>
+                            <div class="text-lg font-bold text-slate-800" id="pattern-familiarity">Loading...</div>
+                            <div class="text-xs text-slate-500">Collective recognition</div>
+                        </div>
+                        <div class="bg-white rounded-lg p-3 border border-slate-200">
+                            <div class="text-xs text-slate-600 mb-1">Signal Confidence</div>
+                            <div class="text-lg font-bold text-green-600" id="signal-confidence">Loading...</div>
+                            <div class="text-xs text-slate-500">System certainty</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 rounded-lg p-4 border-2 border-slate-200 mb-6">
+                    <div class="text-xs text-slate-600 mb-2 font-medium">What This Means</div>
+                    <div class="text-sm text-slate-700 space-y-2">
+                        <p>This signal reflects collective market behavior, not individual judgment. It helps both parties understand how this deal compares to anonymous patterns.</p>
+                        <p class="text-xs text-slate-500">No scores are saved. No identities are tracked. This reflection exists only for this transaction.</p>
+                    </div>
+                </div>
+
+                <div class="space-y-3">
+                    <button onclick="generateLiveSignal()" class="w-full bg-indigo-600 text-white py-3 rounded-lg font-medium hover:bg-indigo-700 transition-colors">
+                        Generate Live Signal from Backend
+                    </button>
+                    <button onclick="showScreen(1)" class="w-full bg-slate-200 text-slate-700 py-3 rounded-lg font-medium hover:bg-slate-300 transition-colors">
+                        Start New Negotiation
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Dots -->
+        <div class="flex justify-center gap-2 p-4">
+            <div class="w-2 h-2 rounded-full bg-indigo-600 screen-dot active" data-screen="1"></div>
+            <div class="w-2 h-2 rounded-full bg-slate-300 screen-dot" data-screen="2"></div>
+            <div class="w-2 h-2 rounded-full bg-slate-300 screen-dot" data-screen="3"></div>
+        </div>
+
+        <!-- Footer -->
+        <div class="bg-gradient-to-r from-amber-50 to-orange-50 border-t-2 border-amber-200 p-4">
+            <p class="text-slate-700 text-xs text-center">
+                <strong>Design Philosophy:</strong> Every element serves comprehension, not persuasion. The interface disappears into the negotiation.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // API base URL
+        const API_BASE = 'http://localhost:8080/api';
+
+        // Screen navigation
+        function showScreen(screenNumber) {
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.add('hidden');
+                screen.classList.remove('active');
+            });
+
+            const targetScreen = document.getElementById(`screen-${screenNumber}`);
+            targetScreen.classList.remove('hidden');
+            targetScreen.classList.add('active');
+
+            document.querySelectorAll('.screen-dot').forEach(dot => {
+                dot.classList.remove('bg-indigo-600');
+                dot.classList.add('bg-slate-300');
+            });
+            document.querySelector(`[data-screen="${screenNumber}"]`).classList.remove('bg-slate-300');
+            document.querySelector(`[data-screen="${screenNumber}"]`).classList.add('bg-indigo-600');
+
+            // Load market context when showing screen 2
+            if (screenNumber === 2) {
+                loadMarketContext();
+            }
+        }
+
+        // Load market context from backend
+        async function loadMarketContext() {
+            try {
+                const response = await fetch(`${API_BASE}/market_context`);
+                const data = await response.json();
+                
+                document.getElementById('market-coherence-display').textContent = data.market_coherence.toFixed(3);
+                document.getElementById('trust-density-display').textContent = data.trust_density.toFixed(3);
+                document.getElementById('coherence-display').textContent = `Coherence: ${data.market_coherence.toFixed(3)}`;
+                
+            } catch (error) {
+                console.error('Error loading market context:', error);
+                document.getElementById('market-coherence-display').textContent = 'Error';
+                document.getElementById('trust-density-display').textContent = 'Error';
+            }
+        }
+
+        // Simulate negotiation using backend
+        async function simulateNegotiation() {
+            const vendorInput = document.getElementById('vendor-input').value;
+            const buyerInput = document.getElementById('buyer-input').value;
+            const commodity = document.getElementById('commodity-select').value;
+
+            if (!vendorInput || !buyerInput) {
+                alert('Please enter both vendor and buyer messages');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/simulate_negotiation`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        vendor_text: vendorInput,
+                        buyer_text: buyerInput,
+                        commodity: commodity
+                    })
+                });
+
+                const data = await response.json();
+                
+                // Update conversation display
+                document.getElementById('vendor-original').textContent = vendorInput;
+                document.getElementById('vendor-translated').textContent = `Patterns: ${data.vendor.patterns.negotiation_style}, ${data.vendor.patterns.price_sensitivity}`;
+                
+                document.getElementById('buyer-original').textContent = buyerInput;
+                document.getElementById('buyer-translated').textContent = `Patterns: ${data.buyer.patterns.negotiation_style}, ${data.buyer.patterns.price_sensitivity}`;
+
+                // Store signals for later display
+                window.lastVendorSignal = data.vendor.signal;
+                window.lastBuyerSignal = data.buyer.signal;
+                window.lastAnalysis = data.vendor.analysis;
+
+                alert('Negotiation processed! View Market Context to see updated collective memory.');
+                
+            } catch (error) {
+                console.error('Error simulating negotiation:', error);
+                alert('Error processing negotiation');
+            }
+        }
+
+        // Generate live signal from backend
+        async function generateLiveSignal() {
+            const signalElement = document.getElementById('alignment-signal');
+            const originalText = signalElement.textContent;
+            
+            // Show loading state
+            signalElement.textContent = 'Analyzing collective market patterns...';
+            signalElement.classList.add('pulse-animation');
+
+            try {
+                const response = await fetch(`${API_BASE}/generate_signal`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        vendor_text: document.getElementById('vendor-input').value || 'Quality produce, 26 rupees per kg, fair price',
+                        buyer_text: document.getElementById('buyer-input').value || 'I trust your quality, 25 rupees works',
+                        commodity: document.getElementById('commodity-select').value
+                    })
+                });
+
+                const data = await response.json();
+                
+                signalElement.textContent = data.signal;
+                signalElement.classList.remove('pulse-animation');
+
+                // Update metrics
+                document.getElementById('pattern-familiarity').textContent = (data.pattern_familiarity * 100).toFixed(1) + '%';
+                document.getElementById('signal-confidence').textContent = (data.confidence * 100).toFixed(1) + '%';
+
+                // Style based on signal type
+                if (data.signal.includes('System maintains silence')) {
+                    signalElement.classList.add('text-slate-500', 'italic');
+                } else {
+                    signalElement.classList.remove('text-slate-500', 'italic');
+                }
+
+            } catch (error) {
+                console.error('Error generating signal:', error);
+                signalElement.textContent = '[System maintains silence - connection error]';
+                signalElement.classList.remove('pulse-animation');
+                signalElement.classList.add('text-slate-500', 'italic');
+            }
+        }
+
+        // Clear input fields
+        function clearInputs() {
+            document.getElementById('vendor-input').value = '';
+            document.getElementById('buyer-input').value = '';
+        }
+
+        // Add click handlers for navigation dots
+        document.querySelectorAll('.screen-dot').forEach(dot => {
+            dot.addEventListener('click', () => {
+                const screenNumber = parseInt(dot.dataset.screen);
+                showScreen(screenNumber);
+            });
+        });
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', () => {
+            showScreen(1);
+            loadMarketContext();
+        });
+    </script>
+</body>
+</html>
