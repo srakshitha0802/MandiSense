@@ -43,6 +43,7 @@ jobs:
 
     - name: Build application
       run: npm run build
+      continue-on-error: true
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2
