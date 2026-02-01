@@ -35,11 +35,12 @@ export interface RealTimeData {
 }
 
 class RealWorldIntegrationService {
-  private governmentAPIs: GovernmentAPI;
-  private exchangeAPIs: ExchangeAPI;
-  private paymentGateways: PaymentGateway;
+  private governmentAPIs!: GovernmentAPI;
+  private exchangeAPIs!: ExchangeAPI;
+  private paymentGateways!: PaymentGateway;
   private cache: Map<string, { data: any; timestamp: number }> = new Map();
   private cacheTimeout = 5 * 60 * 1000; // 5 minutes
+  private initialized = false;
 
   constructor() {
     this.initializeAPIs();
@@ -742,7 +743,7 @@ class RealWorldIntegrationService {
   }
 
   private generateWeatherRecommendations(weather: any): string[] {
-    const recommendations = [];
+    const recommendations: string[] = [];
     
     if (weather.main.temp > 35) {
       recommendations.push('High temperature alert - increase irrigation frequency');
@@ -772,7 +773,7 @@ class RealWorldIntegrationService {
   }
 
   private generateSatelliteRecommendations(ndvi: number): string[] {
-    const recommendations = [];
+    const recommendations: string[] = [];
     
     if (ndvi < 0.5) {
       recommendations.push('Low vegetation index - check irrigation and nutrients');

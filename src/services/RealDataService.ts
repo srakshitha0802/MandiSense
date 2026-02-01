@@ -256,7 +256,7 @@ class RealDataService {
 
   private generateHistoricalData(commodity: string, days: number): any[] {
     const basePrice = this.getBasePriceForCommodity(commodity);
-    const data = [];
+    const data: any[] = [];
     
     for (let i = days; i >= 0; i--) {
       const date = new Date();

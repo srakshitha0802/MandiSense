@@ -296,7 +296,7 @@ class UserProfileService {
   }
 
   // Get user's crops
-  getUserCrops(): UserProfile['farmDetails']['crops'] {
+  getUserCrops(): { name: string; area: number; season: string; variety: string; }[] {
     return this.currentUser?.farmDetails?.crops || [];
   }
 
@@ -346,11 +346,11 @@ class UserProfileService {
     return true;
   }
 
-  // Get personalized recommendations based on user data
+// Get personalized recommendations based on user data
   getPersonalizedRecommendations(): any[] {
     if (!this.currentUser) return [];
 
-    const recommendations = [];
+    const recommendations: any[] = [];
     const userCrops = this.getUserCrops();
     const location = this.getUserLocation();
 
@@ -446,6 +446,9 @@ class UserProfileService {
     const inputs = this.getUserInputs();
     const transactions = this.getUserTransactions();
     
+    const mostUsedFeatures = this.getMostUsedFeatures();
+    const activityPattern = this.getActivityPattern();
+    
     return {
       totalInputs: inputs.length,
       inputsBySource: inputs.reduce((acc, input) => {
@@ -454,13 +457,18 @@ class UserProfileService {
       }, {} as Record<string, number>),
       totalTransactions: transactions.length,
       transactionVolume: transactions.reduce((sum, txn) => sum + txn.amount, 0),
-      mostUsedFeatures: this.getMostUsedFeatures(),
-      activityPattern: this.getActivityPattern()
+      mostUsedFeatures,
+      activityPattern
     };
   }
 
   private getMostUsedFeatures(): string[] {
-    const featureCount = this.userInputs.reduce((acc, input) => {
+    const inputs = this.getUserInputs();
+    if (!inputs || inputs.length === 0) {
+      return ['market_prices', 'weather', 'trading'];
+    }
+    
+    const featureCount = inputs.reduce((acc, input) => {
       acc[input.field] = (acc[input.field] || 0) + 1;
       return acc;
     }, {} as Record<string, number>);
@@ -472,16 +480,34 @@ class UserProfileService {
   }
 
   private getActivityPattern(): any {
+    const inputs = this.getUserInputs();
+    if (!inputs || inputs.length === 0) {
+      return {
+        hourlyActivity: new Array(24).fill(0),
+        peakHour: 9,
+        totalActivity: 0
+      };
+    }
+    
     const hourlyActivity = new Array(24).fill(0);
     
-    this.userInputs.forEach(input => {
-      const hour = new Date(input.timestamp).getHours();
-      hourlyActivity[hour]++;
+    inputs.forEach(input => {
+      try {
+        const hour = new Date(input.timestamp).getHours();
+        if (hour >= 0 && hour < 24) {
+          hourlyActivity[hour]++;
+        }
+      } catch (error) {
+        // Skip invalid timestamps
+      }
     });
+
+    const maxActivity = Math.max(...hourlyActivity);
+    const peakHour = maxActivity > 0 ? hourlyActivity.indexOf(maxActivity) : 9;
 
     return {
       hourlyActivity,
-      peakHour: hourlyActivity.indexOf(Math.max(...hourlyActivity)),
+      peakHour,
       totalActivity: hourlyActivity.reduce((sum, count) => sum + count, 0)
     };
   }

@@ -268,6 +268,11 @@ class LanguageService {
     const langTranslations = translations[this.currentLanguage] || translations.en;
     let translation = langTranslations[key] || translations.en[key] || key;
     
+    // If translation is still the key itself, try English
+    if (translation === key && this.currentLanguage !== 'en') {
+      translation = translations.en[key] || key;
+    }
+    
     // Replace parameters if provided
     if (params) {
       Object.keys(params).forEach(param => {
@@ -276,6 +281,33 @@ class LanguageService {
     }
     
     return translation;
+  }
+
+  // Get translation with language fallback chain
+  translateWithFallback(key: string, fallbackLanguages: string[] = ['en'], params?: Record<string, string>): string {
+    // Try current language first
+    let translation = this.translate(key, params);
+    
+    // If not found, try fallback languages
+    if (translation === key || translation.startsWith('{{')) {
+      for (const lang of fallbackLanguages) {
+        if (lang !== this.currentLanguage) {
+          const fallbackTranslations = translations[lang] || {};
+          translation = fallbackTranslations[key] || key;
+          if (translation !== key) {
+            break;
+          }
+        }
+      }
+    }
+    
+    return translation;
+  }
+
+  // Check if a translation exists
+  hasTranslation(key: string): boolean {
+    const langTranslations = translations[this.currentLanguage] || {};
+    return key in langTranslations;
   }
 
   addLanguageChangeListener(callback: (lang: string) => void): void {

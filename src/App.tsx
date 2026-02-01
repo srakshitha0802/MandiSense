@@ -2009,8 +2009,8 @@ const ChatPage = () => {
   };
 
   // Generate personalized quick actions based on user data
-  const getPersonalizedQuickActions = () => {
-    const actions = [];
+  const getPersonalizedQuickActions = (): { text: string; label: string }[] => {
+    const actions: { text: string; label: string }[] = [];
     
     if (userCrops.length > 0) {
       actions.push({
@@ -2245,12 +2245,35 @@ const ChatPage = () => {
 const HomePage = () => {
   const t = (key: string) => languageService.translate(key);
 
+  // Get user context for personalized content
+  const currentUser = userProfileService.getCurrentUser();
+  const userCrops = userProfileService.getUserCrops();
+  const userLocation = userProfileService.getUserLocation();
+
   return (
     <div>
       <div className="text-center mb-4">
         <h1 className="text-2xl font-bold mb-2">{t('home.welcome')}</h1>
         <p className="text-gray">{t('home.subtitle')}</p>
+        {currentUser && (
+          <p className="text-sm text-green mt-2">
+            👋 Welcome back, {currentUser.name}!
+          </p>
+        )}
       </div>
+      
+      {userCrops.length > 0 && (
+        <div className="card mb-4 bg-green-50">
+          <h3 className="font-bold mb-2">🌾 Your Crops</h3>
+          <div className="flex gap-2 flex-wrap">
+            {userCrops.map((crop, index) => (
+              <span key={index} className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm">
+                {crop.name} ({crop.area} acres)
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
       
       <div className="grid grid-3 mb-4">
         <div className="card text-center">
@@ -2630,8 +2653,8 @@ const PricesPage = () => {
   };
 
   // Get commodity suggestions based on user crops
-  const getCommodityOptions = () => {
-    const options = [];
+  const getCommodityOptions = (): { key: string; name: string; isUserCrop: boolean }[] => {
+    const options: { key: string; name: string; isUserCrop: boolean }[] = [];
     
     // Add user's crops first
     userCrops.forEach(crop => {
@@ -2885,7 +2908,7 @@ const TradePage = () => {
     { id: 2, commodity: 'Onions', buyer: 'City Markets', seller: 'Gujarat Farms', quantity: 800, originalPrice: 38, currentPrice: 36, status: 'accepted', messages: 5 },
   ]);
   const [marketData, setMarketData] = useState<MarketPrice[]>([]);
-  const [realTimeOrders, setRealTimeOrders] = useState([]);
+  const [realTimeOrders, setRealTimeOrders] = useState<any[]>([]);
   const [userTransactions, setUserTransactions] = useState<any[]>([]);
 
   const currentUser = userProfileService.getCurrentUser();
@@ -3016,8 +3039,8 @@ const TradePage = () => {
     (((parseFloat(formData.price) - currentMarketPrice) / currentMarketPrice) * 100).toFixed(2) : '0';
 
   // Get user's crop suggestions for commodity dropdown
-  const getCommoditySuggestions = () => {
-    const suggestions = [];
+  const getCommoditySuggestions = (): { name: string; source: string }[] => {
+    const suggestions: { name: string; source: string }[] = [];
     
     // Add user's crops first
     userCrops.forEach(crop => {

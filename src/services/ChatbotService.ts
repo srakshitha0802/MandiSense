@@ -39,8 +39,9 @@ export interface ChatAction {
 
 class ChatbotService {
   private context: ChatContext;
-  private knowledgeBase: Record<string, any>;
-  private intentClassifier: Record<string, RegExp[]>;
+  private knowledgeBase!: Record<string, any>;
+  private intentClassifier!: Record<string, RegExp[]>;
+  private initialized = false;
 
   constructor() {
     this.initializeKnowledgeBase();

@@ -110,43 +110,64 @@ class VoiceAssistantService {
   async startListening(language: string = 'en'): Promise<VoiceCommand> {
     return new Promise((resolve, reject) => {
       if (!this.recognition) {
-        reject(new Error('Speech recognition not supported'));
+        // Fallback: use text input simulation for unsupported browsers
+        console.warn('Speech recognition not supported, using fallback');
+        const fallbackCommand: VoiceCommand = {
+          id: `voice_${Date.now()}`,
+          text: '',
+          language,
+          confidence: 0,
+          intent: 'unknown',
+          entities: {},
+          timestamp: new Date().toISOString()
+        };
+        reject(new Error('Speech recognition not supported in this browser'));
         return;
       }
 
-      this.currentLanguage = this.getLanguageCode(language);
-      this.recognition.lang = this.currentLanguage;
-      this.isListening = true;
+      try {
+        this.currentLanguage = this.getLanguageCode(language);
+        this.recognition.lang = this.currentLanguage;
+        this.isListening = true;
 
-      this.recognition.onresult = (event: any) => {
-        const result = event.results[0];
-        const transcript = result[0].transcript;
-        const confidence = result[0].confidence;
+        this.recognition.onresult = (event: any) => {
+          if (event.results && event.results[0]) {
+            const result = event.results[0];
+            const transcript = result[0]?.transcript || '';
+            const confidence = result[0]?.confidence || 0;
 
-        const command: VoiceCommand = {
-          id: `voice_${Date.now()}`,
-          text: transcript,
-          language,
-          confidence,
-          intent: this.detectIntent(transcript, language),
-          entities: this.extractEntities(transcript, language),
-          timestamp: new Date().toISOString()
+            const command: VoiceCommand = {
+              id: `voice_${Date.now()}`,
+              text: transcript,
+              language,
+              confidence,
+              intent: this.detectIntent(transcript, language),
+              entities: this.extractEntities(transcript, language),
+              timestamp: new Date().toISOString()
+            };
+
+            this.isListening = false;
+            resolve(command);
+          } else {
+            this.isListening = false;
+            reject(new Error('No speech recognition result'));
+          }
         };
 
-        this.isListening = false;
-        resolve(command);
-      };
+        this.recognition.onerror = (event: any) => {
+          this.isListening = false;
+          reject(new Error(`Speech recognition error: ${event.error || 'unknown error'}`));
+        };
 
-      this.recognition.onerror = (event: any) => {
-        this.isListening = false;
-        reject(new Error(`Speech recognition error: ${event.error}`));
-      };
+        this.recognition.onend = () => {
+          this.isListening = false;
+        };
 
-      this.recognition.onend = () => {
+        this.recognition.start();
+      } catch (error) {
         this.isListening = false;
-      };
-
-      this.recognition.start();
+        reject(new Error(`Failed to start speech recognition: ${error}`));
+      }
     });
   }
 
