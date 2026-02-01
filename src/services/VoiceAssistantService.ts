@@ -111,16 +111,7 @@ class VoiceAssistantService {
     return new Promise((resolve, reject) => {
       if (!this.recognition) {
         // Fallback: use text input simulation for unsupported browsers
-        console.warn('Speech recognition not supported, using fallback');
-        const fallbackCommand: VoiceCommand = {
-          id: `voice_${Date.now()}`,
-          text: '',
-          language,
-          confidence: 0,
-          intent: 'unknown',
-          entities: {},
-          timestamp: new Date().toISOString()
-        };
+        console.warn('Speech recognition not supported in this browser');
         reject(new Error('Speech recognition not supported in this browser'));
         return;
       }

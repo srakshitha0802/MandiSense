@@ -422,8 +422,6 @@ class ChatbotService {
   }
 
   private handleDiseaseHelp(entities: Record<string, any>, language: string): string {
-    const crop = entities.crop || 'general';
-
     const responses = {
       en: `🔬 Disease & Pest Management:\n\nFor accurate diagnosis, I recommend:\n1. Upload a clear photo of affected plants\n2. Describe symptoms (yellowing, spots, wilting)\n3. Mention when symptoms started\n\n🚨 Common issues this season:\n• Early blight in tomatoes\n• Aphids in various crops\n• Fungal infections due to humidity\n\nWould you like to upload a photo for AI-powered disease detection?`,
       hi: `🔬 रोग और कीट प्रबंधन:\n\nसटीक निदान के लिए, मैं सुझाता हूं:\n1. प्रभावित पौधों की स्पष्ट तस्वीर अपलोड करें\n2. लक्षणों का वर्णन करें (पीलापन, धब्बे, मुरझाना)\n3. बताएं कि लक्षण कब शुरू हुए\n\n🚨 इस मौसम की आम समस्याएं:\n• टमाटर में अर्ली ब्लाइट\n• विभिन्न फसलों में एफिड\n• नमी के कारण फंगल संक्रमण\n\nक्या आप AI-संचालित रोग पहचान के लिए फोटो अपलोड करना चाहते हैं?`,
