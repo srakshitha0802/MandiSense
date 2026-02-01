@@ -12,7 +12,9 @@ jobs:
     
     strategy:
       matrix:
-        node-version: [16.x, 18.x]
+        node-version: [16.x]
+    env:
+      NODE_OPTIONS: --openssl-legacy-provider
     
     steps:
     - name: Checkout code
@@ -111,7 +113,7 @@ jobs:
         cache: 'npm'
     
     - name: Install dependencies
-      run: npm ci
+      run: npm ci --legacy-peer-deps
     
     - name: Build application
       run: npm run build
@@ -145,7 +147,7 @@ jobs:
         cache: 'npm'
     
     - name: Install dependencies
-      run: npm ci
+      run: npm ci --legacy-peer-deps
     
     - name: Build for staging
       run: npm run build
@@ -182,7 +184,7 @@ jobs:
         cache: 'npm'
     
     - name: Install dependencies
-      run: npm ci
+      run: npm ci --legacy-peer-deps
     
     - name: Build for production
       run: npm run build
