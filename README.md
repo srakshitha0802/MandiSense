@@ -253,13 +253,13 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🗺️ Roadmap
 
-### Version 2.1 (Q2 2024)
+### Version 2.1 (Q2 2026)
 - [ ] Mobile app development
 - [ ] Advanced ML models
 - [ ] More regional languages
 - [ ] Enhanced IoT integration
 
-### Version 2.2 (Q3 2024)
+### Version 2.2 (Q3 2026)
 - [ ] Marketplace expansion
 - [ ] Financial services integration
 - [ ] Advanced analytics dashboard
