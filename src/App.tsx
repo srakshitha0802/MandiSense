@@ -5,9 +5,8 @@ import { realDataService, MarketPrice, WeatherData, NewsItem } from './services/
 import { blockchainService, BlockchainTransaction, SmartContract } from './services/BlockchainService';
 import { aiService, PricePrediction, YieldForecast, DiseaseDetection } from './services/AIService';
 import { iotService, IoTDevice, SensorData, SmartIrrigation } from './services/IoTService';
-import { voiceAssistantService, VoiceCommand, VoiceResponse } from './services/VoiceAssistantService';
+import { voiceAssistantService } from './services/VoiceAssistantService';
 import { chatbotService, ChatMessage } from './services/ChatbotService';
-import { realWorldIntegrationService } from './services/RealWorldIntegrationService';
 import { userProfileService, UserProfile } from './services/UserProfileService';
 
 // Enhanced Header with language switching and user profile
@@ -34,71 +33,17 @@ const Header = ({
   return (
     <header className="header">
       <div className="header-content">
-        <a href="#" className="logo">🌾 MandiSense</a>
+        <button type="button" className="logo" onClick={() => setCurrentPage('home')}>🌾 MandiSense</button>
         <nav className="nav">
-          <a 
-            href="#" 
-            className={`nav-link ${currentPage === 'home' ? 'active' : ''}`}
-            onClick={() => setCurrentPage('home')}
-          >
-            {t('nav.home')}
-          </a>
-          <a 
-            href="#" 
-            className={`nav-link ${currentPage === 'market' ? 'active' : ''}`}
-            onClick={() => setCurrentPage('market')}
-          >
-            {t('nav.market')}
-          </a>
-          <a 
-            href="#" 
-            className={`nav-link ${currentPage === 'prices' ? 'active' : ''}`}
-            onClick={() => setCurrentPage('prices')}
-          >
-            {t('nav.prices')}
-          </a>
-          <a 
-            href="#" 
-            className={`nav-link ${currentPage === 'trade' ? 'active' : ''}`}
-            onClick={() => setCurrentPage('trade')}
-          >
-            {t('nav.trade')}
-          </a>
-          <a 
-            href="#" 
-            className={`nav-link ${currentPage === 'analytics' ? 'active' : ''}`}
-            onClick={() => setCurrentPage('analytics')}
-          >
-            {t('nav.analytics')}
-          </a>
-          <a 
-            href="#" 
-            className={`nav-link ${currentPage === 'blockchain' ? 'active' : ''}`}
-            onClick={() => setCurrentPage('blockchain')}
-          >
-            🔗 Blockchain
-          </a>
-          <a 
-            href="#" 
-            className={`nav-link ${currentPage === 'iot' ? 'active' : ''}`}
-            onClick={() => setCurrentPage('iot')}
-          >
-            🌐 IoT Farm
-          </a>
-          <a 
-            href="#" 
-            className={`nav-link ${currentPage === 'ai' ? 'active' : ''}`}
-            onClick={() => setCurrentPage('ai')}
-          >
-            🤖 AI Assistant
-          </a>
-          <a 
-            href="#" 
-            className={`nav-link ${currentPage === 'chat' ? 'active' : ''}`}
-            onClick={() => setCurrentPage('chat')}
-          >
-            💬 AI Chat
-          </a>
+          <button type="button" className={`nav-link ${currentPage === 'home' ? 'active' : ''}`} onClick={() => setCurrentPage('home')}>{t('nav.home')}</button>
+          <button type="button" className={`nav-link ${currentPage === 'market' ? 'active' : ''}`} onClick={() => setCurrentPage('market')}>{t('nav.market')}</button>
+          <button type="button" className={`nav-link ${currentPage === 'prices' ? 'active' : ''}`} onClick={() => setCurrentPage('prices')}>{t('nav.prices')}</button>
+          <button type="button" className={`nav-link ${currentPage === 'trade' ? 'active' : ''}`} onClick={() => setCurrentPage('trade')}>{t('nav.trade')}</button>
+          <button type="button" className={`nav-link ${currentPage === 'analytics' ? 'active' : ''}`} onClick={() => setCurrentPage('analytics')}>{t('nav.analytics')}</button>
+          <button type="button" className={`nav-link ${currentPage === 'blockchain' ? 'active' : ''}`} onClick={() => setCurrentPage('blockchain')}>🔗 Blockchain</button>
+          <button type="button" className={`nav-link ${currentPage === 'iot' ? 'active' : ''}`} onClick={() => setCurrentPage('iot')}>🌐 IoT Farm</button>
+          <button type="button" className={`nav-link ${currentPage === 'ai' ? 'active' : ''}`} onClick={() => setCurrentPage('ai')}>🤖 AI Assistant</button>
+          <button type="button" className={`nav-link ${currentPage === 'chat' ? 'active' : ''}`} onClick={() => setCurrentPage('chat')}>💬 AI Chat</button>
         </nav>
         
         <div className="flex items-center gap-4">

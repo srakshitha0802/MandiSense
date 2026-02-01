@@ -1,0 +1,27 @@
+{
+  "extends": "react-app",
+  "rules": {
+    "@typescript-eslint/no-unused-vars": [
+      "warn",
+      {
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_|userLocation|setNegotiations"
+      }
+    ],
+    "react-hooks/exhaustive-deps": [
+      "warn",
+      {
+        "additionalHooks": ""
+      }
+    ]
+  },
+  "overrides": [
+    {
+      "files": ["src/App.tsx"],
+      "rules": {
+        "@typescript-eslint/no-unused-vars": "off",
+        "react-hooks/exhaustive-deps": "off"
+      }
+    }
+  ]
+}
